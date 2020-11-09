@@ -1,0 +1,168 @@
+<<<<<<< HEAD
+{
+    "0": {
+        "_studentID": 0,
+        "_lastName": "liu",
+        "_firstName": "Ar",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "MCR3U": 88,
+            "ICS3U": 100
+        },
+        "_registered": true
+    },
+    "1": {
+        "_studentID": 1,
+        "_lastName": "Liu",
+        "_firstName": "jan",
+        "_gradeLevel": 10,
+        "_transcript": {
+            "MCR3U": 90,
+            "ISC3U": 90
+        },
+        "_registered": true
+    },
+    "2": {
+        "_studentID": 2,
+        "_lastName": "li",
+        "_firstName": "pat",
+        "_gradeLevel": 11,
+        "_transcript": {},
+        "_registered": false
+    },
+    "3": {
+        "_studentID": 3,
+        "_lastName": "wang",
+        "_firstName": "kev",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "ENG2D": 87
+        },
+        "_registered": false
+    },
+    "4": {
+        "_studentID": 4,
+        "_lastName": "zou",
+        "_firstName": "jojo",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "MCR3U": 98
+        },
+        "_registered": true
+    },
+    "5": {
+        "_studentID": 5,
+        "_lastName": "li",
+        "_firstName": "kai",
+        "_gradeLevel": 6,
+        "_transcript": {
+            "JDH4J": 97
+        },
+        "_registered": false
+    },
+    "6": {
+        "_studentID": 6,
+        "_lastName": "Heathfield",
+        "_firstName": "Christopher",
+        "_gradeLevel": 9,
+        "_transcript": {
+            "KDH7G": 99
+        },
+        "_registered": false
+    },
+    "7": {
+        "_studentID": 7,
+        "_lastName": "bunny",
+        "_firstName": "bugs",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "ICS3U": 75,
+            "MCR3U": 82
+        },
+        "_registered": true
+    }
+=======
+{
+    "0": {
+        "_studentID": 0,
+        "_lastName": "liu",
+        "_firstName": "Ar",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "MCR3U": 88,
+            "ICS3U": 100
+        },
+        "_registered": true
+    },
+    "1": {
+        "_studentID": 1,
+        "_lastName": "Liu",
+        "_firstName": "jan",
+        "_gradeLevel": 10,
+        "_transcript": {
+            "MCR3U": 90,
+            "ISC3U": 90
+        },
+        "_registered": true
+    },
+    "2": {
+        "_studentID": 2,
+        "_lastName": "li",
+        "_firstName": "pat",
+        "_gradeLevel": 11,
+        "_transcript": {},
+        "_registered": false
+    },
+    "3": {
+        "_studentID": 3,
+        "_lastName": "wang",
+        "_firstName": "kev",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "ENG2D": 87
+        },
+        "_registered": false
+    },
+    "4": {
+        "_studentID": 4,
+        "_lastName": "zou",
+        "_firstName": "jojo",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "MCR3U": 98
+        },
+        "_registered": true
+    },
+    "5": {
+        "_studentID": 5,
+        "_lastName": "li",
+        "_firstName": "kai",
+        "_gradeLevel": 6,
+        "_transcript": {
+            "JDH4J": 97
+        },
+        "_registered": false
+    },
+    "6": {
+        "_studentID": 6,
+        "_lastName": "Heathfield",
+        "_firstName": "Christopher",
+        "_gradeLevel": 9,
+        "_transcript": {
+            "KDH7G": 99
+        },
+        "_registered": false
+    },
+    "7": {
+        "_studentID": 7,
+        "_lastName": "bunny",
+        "_firstName": "bugs",
+        "_gradeLevel": 11,
+        "_transcript": {
+            "ICS3U": 75,
+            "MCR3U": 82
+        },
+        "_registered": true
+    }
+>>>>>>> 8f5946147103d092ce4bb4ed0a3808b334187ed2
+}
