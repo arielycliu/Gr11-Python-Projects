@@ -5,7 +5,7 @@ Music Credit to:
 
 ==========
 
-### ~Game Instructions~
+### ~ Game Instructions ~
 ___________
 - Click blue circles to collect points
 > Score streaks by collecting in succession
