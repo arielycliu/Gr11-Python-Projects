@@ -286,7 +286,11 @@ def endscreen():
         score -= roundScore
 
         if life == 0:
+            pygame.mixer.music.set_volume(0.3)
             game_over()
+            pygame.mixer.music.set_volume(0.3)
+
+            highscores()
             score = 0
             roundScore = 0
             jojoScore = 0
@@ -331,7 +335,6 @@ def endscreen():
 
 
 def game_over():
-    pygame.mixer.music.set_volume(0.3)
     global score, running
 
     file = open("highscores.txt", "r")
@@ -357,7 +360,7 @@ def game_over():
         roundText = largeFont.render("GAME OVER", True, (255, 255, 255))
 
         rudeTextt = medFont.render("Total score is: " + str(score), True, (255, 255, 255))
-        space_skip = smallFont.render("Press space to play again!", True, (255, 255, 255))
+        space_skip = smallFont.render("Press space to advance", True, (255, 255, 255))
 
         win.blit(roundText, (30, 50))
         win.blit(rudeTextt, (30, 200))
@@ -408,7 +411,7 @@ def game_over():
                     rudeTextt = medFont.render("Total score is: " + str(score), True, (255, 255, 255))
                     username = medFont.render("Input username: ", True, (255, 255, 255))
                     userNAME = medFont.render(userInit, True, (255, 255, 255))
-                    space_skip = smallFont.render("Press space to play again!", True, (255, 255, 255))
+                    space_skip = smallFont.render("Press space to advance", True, (255, 255, 255))
 
                     win.blit(roundText, (30, 50))
                     win.blit(high_score, (30, 90))
@@ -440,10 +443,6 @@ def game_over():
                 win.blit(userNAME, (330, 300))
                 pygame.display.update()
 
-                print("The previous highscores were:")
-                for i in range(10):
-                    print(str((i + 1)) + ". " + initials[i][:3] + ", " + str(hscores[i]))
-
                 initials[scoreRank] = userInit + "\n"
 
                 # makes the file blank
@@ -468,6 +467,67 @@ def game_over():
                             win.fill(000)
                             pygame.display.update()
                             return
+
+def highscores():
+    score_display = []
+
+    highscores_screen = True
+
+    # Read file
+    file = open("highscores.txt", "r")
+
+    initials = []
+    hscores = []
+
+    for i in range(10):
+        initial = file.readline()
+        initials.append(initial)
+
+        hscore = file.readline()
+        hscores.append(hscore)
+
+    # closes the file to write to it later
+    file.close()
+    highscore_y = 120
+    highscore_x = 30
+    win.fill(000)
+
+    for i in range(len(initials)): # create an array of rendered text
+        score_text = str((i + 1)) + ". " + initials[i][:3] + ", " + str(hscores[i])[:-1]
+        score_display.append(smallFont.render(score_text, True, (255, 255, 255)))
+
+    for s in score_display:   # blit all the scores to the screen in two rows
+        if highscore_x == 30:
+            highscore_y += 50
+            win.blit(s, (highscore_x, highscore_y))
+            highscore_x = 250
+
+        else:
+            win.blit(s, (highscore_x, highscore_y))
+            highscore_x = 30
+        pygame.display.update()
+
+
+    while highscores_screen:
+        pygame.time.delay(25)  # rate
+
+        roundText = largeFont.render("HIGH SCORES", True, (255, 255, 255))
+        space_skip = smallFont.render("Press space to play again!", True, (255, 255, 255))
+
+        win.blit(roundText, (30, 50))
+        win.blit(space_skip, (180, 450))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # check quit game
+                global running
+                running = False
+                return
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                win.fill(000)
+                pygame.display.update()
+                highscores_screen = False
 
 
 def circle_find():
