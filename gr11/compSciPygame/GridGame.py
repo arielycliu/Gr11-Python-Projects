@@ -1,3 +1,17 @@
+"""
+
+BLIP THE CIRCLES
+Ariel and Janice Game
+
+~Game Instructions~
+Click blue circles to collect points
+Score streaks by collecting in succession
+If a red circles are the enemies, if they touch a blue circle the point and streak is lost
+Collect less points than the red circles and you lose a life
+Enemies get faster every round, You only have 3 lives
+
+"""
+
 import pygame
 import random
 import math
@@ -99,7 +113,7 @@ def intro_screen():
 
         for s in story:
 
-            if s == "END":
+            if s == "END":  # like reading end of file
                 return
             space_skip = smallFont.render("Space to skip", True, (255, 255, 255))
             win.blit(space_skip, (25, 450))
@@ -317,7 +331,7 @@ def endscreen():
 
 
 def game_over():
-    pygame.mixer.music.set_volume(0.3)
+    # pygame.mixer.music.set_volume(0.3)
     global score, running
 
     file = open("highscores.txt", "r")
@@ -370,9 +384,15 @@ def game_over():
                 break
 
         if score_is_a_highscore:
-            for i in range(1, scoreRank):
-                hscores[scoreRank], hscores[scoreRank + i] = hscores[scoreRank + i], hscores[scoreRank]
-                initials[scoreRank], initials[scoreRank + i] = initials[scoreRank + i], initials[scoreRank]
+            if scoreRank == 9:
+                pass
+            else:
+                try:
+                    for i in range(1, 10): # moves everything down to insert the new highscore
+                        hscores[scoreRank], hscores[scoreRank + i] = hscores[scoreRank + i], hscores[scoreRank]
+                        initials[scoreRank], initials[scoreRank + i] = initials[scoreRank + i], initials[scoreRank]
+                except:
+                    pass # this means that all values have been pushed down by 1
 
             hscores[scoreRank] = str(score) + "\n"
 
@@ -381,7 +401,7 @@ def game_over():
             high_score_screen = True
             userInit = ""
             while high_score_screen:
-                while len(userInit) != 3:
+                while len(userInit) != 3:  # once the initials are set they are unchangeable, similar to arcade games
                     win.fill(000)
                     roundText = largeFont.render("GAME OVER", True, (255, 255, 255))
                     high_score = largeFont.render("HIGH SCORE", True, (255, 255, 255))
@@ -399,6 +419,7 @@ def game_over():
 
                     pygame.display.update()
 
+                    # takes the user
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pygame.quit()
@@ -415,12 +436,17 @@ def game_over():
 
                         pygame.display.update()
 
+                userNAME = medFont.render(userInit, True, (255, 255, 255))
                 win.blit(userNAME, (330, 300))
                 pygame.display.update()
 
+                print("The previous highscores were:")
+                for i in range(10):
+                    print(str((i + 1)) + ". " + initials[i][:3] + ", " + str(hscores[i]))
+
                 initials[scoreRank] = userInit + "\n"
 
-                # makes the file blank so that it can
+                # makes the file blank
                 file = open("highscores.txt", "w")
 
                 # now we put the new data back into the file
@@ -432,7 +458,7 @@ def game_over():
                 file.write(insertString)
                 file.close()
 
-                while True:
+                while True:  # makes player choose to quit or play again
                     pygame.time.delay(100)
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -461,7 +487,7 @@ def circle_find():
             min(distance))  # saves the index of the closest circle to delete the circle later
         distance = min(distance)  # fetches the lowest distance
 
-        # movement
+        # movement - calculated using similar triangle ratios
         if not closest[0] - circle.center[0] == 0:  # checks to see if it is vertically aligned
             circle.center = (circle.center[0] + speed * (closest[0] - circle.center[0]) / abs(distance),
                              circle.center[1] + speed * (closest[1] - circle.center[1]) / abs(distance))
@@ -475,9 +501,9 @@ def circle_find():
 
 def get_hit(index):
     global jojoScore, goodCircles, streak
-    goodCircles.pop(index)
+    goodCircles.pop(index)  # removes the hit circle
     jojoScore += 5
-    streak = 0
+    streak = 0  # breaks any streak
 
 
 running = True
@@ -487,12 +513,12 @@ print("Program start!")
 
 while running:
     if start == True:
-        pygame.mixer.music.load('ghost_choir.mp3')
-        pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.3)
+        # pygame.mixer.music.load('ghost_choir.mp3')
+        # pygame.mixer.music.play(-1)
+        # pygame.mixer.music.set_volume(0.3)
         intro_screen()
         menu()
-        pygame.mixer.music.set_volume(1)
+        # pygame.mixer.music.set_volume(1)
         start = False
 
     for event in pygame.event.get():
@@ -523,7 +549,7 @@ while running:
         if distance <= 2 * circle.radius:  # compare distance of click from center of circle to radius of circle
             get_hit(circle.closest)
 
-    if goodCircles == [] and firstRound == False: # otherwise round screen would display right after the menu
+    if goodCircles == [] and firstRound == False:  # otherwise round screen would display right after the menu
         endscreen()
     elif goodCircles == [] and firstRound == True:
         firstRound = False
@@ -540,7 +566,7 @@ while running:
 
     try:
         circle_find()
-    except: # for when circles are removed at simultaneous times or other similar errors
+    except:  # for when circles are removed at simultaneous times or other similar errors
         pass
 
     redraw_game_window()
