@@ -27,6 +27,7 @@ badCircles = []
 score = 0
 roundScore = 0
 jojoScore = 0
+firstRound = True
 round = 1
 streak = 0
 life = 3
@@ -225,7 +226,7 @@ def how_to_play():
 
 
 def endscreen():
-    global restart, goodCircles, badCircles, round, speed, score, roundScore, jojoScore, life, running
+    global restart, goodCircles, badCircles, round, speed, score, roundScore, jojoScore, life, running, streak
     win.fill(000)
     pygame.display.update()
     restart = True
@@ -260,7 +261,6 @@ def endscreen():
             pygame.display.update()
 
         # updating all the variables
-        score += roundScore
         jojoScore = 0
         roundScore = 0
 
@@ -269,6 +269,7 @@ def endscreen():
 
     else:
         life -= 1
+        score -= roundScore
 
         if life == 0:
             game_over()
@@ -277,6 +278,7 @@ def endscreen():
             jojoScore = 0
             round = 1
             streak = 0
+            speed = delay / 25
             life = 3
             return
 
@@ -318,7 +320,7 @@ def game_over():
     pygame.mixer.music.set_volume(0.3)
     global score, running
 
-    file = open("highscores.txt")
+    file = open("highscores.txt", "r")
 
     initials = []
     hscores = []
@@ -368,21 +370,18 @@ def game_over():
                 break
 
         if score_is_a_highscore:
-            print(scoreRank)
             for i in range(1, scoreRank):
                 hscores[scoreRank], hscores[scoreRank + i] = hscores[scoreRank + i], hscores[scoreRank]
                 initials[scoreRank], initials[scoreRank + i] = initials[scoreRank + i], initials[scoreRank]
 
             hscores[scoreRank] = str(score) + "\n"
 
-            print(hscores)
-
             print("Congrats: High score!")
 
             high_score_screen = True
             userInit = ""
             while high_score_screen:
-                while len(userInit) < 3:
+                while len(userInit) != 3:
                     win.fill(000)
                     roundText = largeFont.render("GAME OVER", True, (255, 255, 255))
                     high_score = largeFont.render("HIGH SCORE", True, (255, 255, 255))
@@ -416,13 +415,10 @@ def game_over():
 
                         pygame.display.update()
 
-                win.fill(000)
-
-                pygame.time.delay(3000)
+                win.blit(userNAME, (330, 300))
+                pygame.display.update()
 
                 initials[scoreRank] = userInit + "\n"
-
-                game_over_screen = False
 
                 # makes the file blank so that it can
                 file = open("highscores.txt", "w")
@@ -436,7 +432,16 @@ def game_over():
                 file.write(insertString)
                 file.close()
 
-                break
+                while True:
+                    pygame.time.delay(100)
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                        keys = pygame.key.get_pressed()
+                        if keys[pygame.K_SPACE]:
+                            win.fill(000)
+                            pygame.display.update()
+                            return
 
 
 def circle_find():
@@ -518,8 +523,10 @@ while running:
         if distance <= 2 * circle.radius:  # compare distance of click from center of circle to radius of circle
             get_hit(circle.closest)
 
-    if goodCircles == []:
+    if goodCircles == [] and firstRound == False: # otherwise round screen would display right after the menu
         endscreen()
+    elif goodCircles == [] and firstRound == True:
+        firstRound = False
 
     if restart == True:
         pos = [(50, 50), (150, 150), (250, 250), (350, 350), (450, 450), (50, 150), (50, 250), (50, 350), (50, 450),
@@ -533,7 +540,7 @@ while running:
 
     try:
         circle_find()
-    except:
+    except: # for when circles are removed at simultaneous times or other similar errors
         pass
 
     redraw_game_window()
