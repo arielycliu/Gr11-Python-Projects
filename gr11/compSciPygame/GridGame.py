@@ -12,7 +12,7 @@ largeFont = pygame.font.SysFont("courier", 40)
 smallFont = pygame.font.SysFont("courier", 20)
 
 restart = True
-
+running = True
 delay = 2
 speed = delay / 25
 start = True
@@ -31,6 +31,13 @@ class Circle(object):
 
 def redraw_game_window():
     win.fill(000)
+
+    lives = smallFont.render("Lives: " + str(life), True, (255, 255, 255))
+    win.blit(lives, (10, 10))
+
+    scores = smallFont.render("Score: " + str(score), True, (255, 255, 255))
+    win.blit(scores, (350, 10))
+
     for circle in goodCircles:
         circle.draw(win)
     for circle in badCircles:
@@ -205,7 +212,7 @@ def how_to_play():
 
 
 def endscreen():
-    global restart, goodCircles, badCircles, round, speed, score, roundScore, jojoScore, life
+    global restart, goodCircles, badCircles, round, speed, score, roundScore, jojoScore, life, running
     win.fill(000)
     pygame.display.update()
     restart = True
@@ -214,20 +221,18 @@ def endscreen():
     medFont = pygame.font.SysFont("courier", 30)
     smallFont = pygame.font.SysFont("courier", 20)
 
-    roundText = largeFont.render("Round " + str(round) + " Over:", True, (255, 255, 255))
-    rudeTexxt = medFont.render("Round score is " + str(roundScore), True, (255, 255, 255))
-    rudeTextt = medFont.render("Total score is " + str(score), True, (255, 255, 255))
-    moreTexts = medFont.render("Jojo's score is " + str(jojoScore), True, (255, 255, 255))
-    nextRound = smallFont.render("Press space to enter next round", True, (255, 255, 255))
-
-    pygame.display.update()
-
     if roundScore >= jojoScore:
 
         end = True
         while end:
 
             pygame.time.delay(100)
+
+            roundText = largeFont.render("Round " + str(round) + " Over:", True, (255, 255, 255))
+            rudeTexxt = medFont.render("Round score is " + str(roundScore), True, (255, 255, 255))
+            rudeTextt = medFont.render("Total score is " + str(score), True, (255, 255, 255))
+            moreTexts = medFont.render("Jojo's score is " + str(jojoScore), True, (255, 255, 255))
+            nextRound = smallFont.render("Press space to enter next round", True, (255, 255, 255))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # check quit game
@@ -255,22 +260,46 @@ def endscreen():
 
     else:
         life -= 1
-        """
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
 
-        ADD THE TEXT TO TELL THEM WHAT TO DO HERE
-        THIS JUST TELLS THEM THAT THEY LOST A LIFE AND ARE TRYING THE SAME ROUND AGAIN
-        """
         if life == 0:
             game_over()
 
+        end = True
+        while end:
+            pygame.time.delay(100)
+
+            roundText = largeFont.render("YOU LOST A LIFE", True, (255, 255, 255))
+            rudeTexxt = smallFont.render("Round score is " + str(roundScore), True, (255, 255, 255))
+            rudeTextt = smallFont.render("Total score is " + str(score), True, (255, 255, 255))
+            moreTexts = smallFont.render("Jojo's score is " + str(jojoScore), True, (255, 255, 255))
+            play_again = largeFont.render("Redo the level", True, (255, 255, 255))
+            nextRound = smallFont.render("Press space to continue playing", True, (255, 255, 255))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:  # check quit game
+                    running = False
+                    return
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                end = False
+
+            win.blit(roundText, (30, 50))
+            win.blit(rudeTexxt, (30, 110))
+            win.blit(rudeTextt, (30, 140))
+            win.blit(moreTexts, (30, 170))
+            win.blit(play_again, (30, 250))
+            win.blit(nextRound, (30, 400))
+            pygame.display.update()
+
+        win.fill(000)
+        pygame.display.update()
+
+        roundScore = 0
+        jojoScore = 0
+
 
 def game_over():
+    pygame.mixer.music.set_volume(0.3)
     global score
     """
     ARIEL ARIEL ARIEL ARIEL ARIEL
@@ -393,7 +422,6 @@ def circle_find():
 def get_hit(index):
     global jojoScore, goodCircles, streak
     goodCircles.pop(index)
-    print('hit')
     jojoScore += 5
     streak = 0
 
@@ -418,8 +446,13 @@ print("Program start!")
 
 while running:
     if start == True:
+        pygame.mixer.music.load('ghost choir.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.3)
         intro_screen()
         menu()
+        pygame.mixer.music.set_volume(1)
+        start = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # check quit game
@@ -449,10 +482,7 @@ while running:
             get_hit(circle.closest)
 
     if goodCircles == []:
-        if start == True:
-            start = False
-        else:
-            endscreen()
+        endscreen()
 
     if restart == True:
         pos = [(50, 50), (150, 150), (250, 250), (350, 350), (450, 450), (50, 150), (50, 250), (50, 350), (50, 450),
