@@ -9,6 +9,7 @@ win = pygame.display.set_mode((500, 500))
 pygame.display.set_caption("Jan and Ari")
 
 largeFont = pygame.font.SysFont("courier", 40)
+medFont = pygame.font.SysFont("courier", 30)
 smallFont = pygame.font.SysFont("courier", 20)
 
 restart = True
@@ -16,6 +17,19 @@ running = True
 delay = 2
 speed = delay / 25
 start = True
+
+# all possible positions for the circles on a five by five grid
+pos = [(50, 50), (150, 150), (250, 250), (350, 350), (450, 450), (50, 150), (50, 250), (50, 350), (50, 450), (150, 50),
+       (150, 250), (150, 350), (150, 450), (250, 50), (250, 150), (250, 350), (250, 450), (350, 50), (350, 150),
+       (350, 250), (350, 450), (450, 50), (450, 150), (450, 250), (450, 350)]
+goodCircles = []
+badCircles = []
+score = 0
+roundScore = 0
+jojoScore = 0
+round = 1
+streak = 0
+life = 3
 
 
 class Circle(object):
@@ -66,12 +80,10 @@ def create_bad_circles():
 
 
 def intro_screen():
-
     win.fill(000)
     pygame.display.update()
 
     # this is to start off the program
-    print("Program start!")
 
     story = ["~Welcome to Return of the JoJos~", "You're a scientist", "from galaxy Sinusoidal-Costangent",
              "where apples can't float...", "You have come to Earth-DJ6 on a mission.",
@@ -108,14 +120,13 @@ def intro_screen():
                     keys = pygame.key.get_pressed()
                     if keys[pygame.K_SPACE]:
                         return
-                    if event.type == pygame.MOUSEBUTTONUP: # check clicking
+                    if event.type == pygame.MOUSEBUTTONUP:  # check clicking
                         win.fill(000)
                         reading = False
                         break
 
 
 def menu():
-
     menu_screen = True
     while menu_screen:
 
@@ -130,7 +141,7 @@ def menu():
 
         play_title = largeFont.render("How to play", True, (255, 255, 255))
         win.blit(play_title, (120, 200))
-        pygame.draw.rect(win, (255,255,255), (75, 200, 350, 50), 3)
+        pygame.draw.rect(win, (255, 255, 255), (75, 200, 350, 50), 3)
 
         play_title = largeFont.render("PLAY", True, (255, 255, 255))
         win.blit(play_title, (200, 315))
@@ -171,10 +182,12 @@ def how_to_play():
     print("Program start!")
 
     instructions = ["~Game Instructions~", "Collect the blue humans", "Click blue circles to collect",
-             "Score points by collecting", "Score streaks by collecting in succession",  "If a red (Jojo) touches a blue",
-            "that point and streak is lost", "Collect less points than red", "and you lose a life", "Enemies get faster every round",
-            "You only have 3 lives", "Collect the humans before JOJO!", "Who will win...",
-             "and capture the most humans?", "END"]
+                    "Score points by collecting", "Score streaks by collecting in succession",
+                    "If a red (Jojo) touches a blue",
+                    "that point and streak is lost", "Collect less points than red", "and you lose a life",
+                    "Enemies get faster every round",
+                    "You only have 3 lives", "Collect the humans before JOJO!", "Who will win...",
+                    "and capture the most humans?", "END"]
 
     help_screen = True
     while help_screen:
@@ -217,10 +230,6 @@ def endscreen():
     pygame.display.update()
     restart = True
 
-    largeFont = pygame.font.SysFont("courier", 40)
-    medFont = pygame.font.SysFont("courier", 30)
-    smallFont = pygame.font.SysFont("courier", 20)
-
     if roundScore >= jojoScore:
 
         end = True
@@ -245,7 +254,7 @@ def endscreen():
 
             win.blit(roundText, (30, 75))
             win.blit(rudeTexxt, (30, 150))
-            win.blit(rudeTextt, (40, 225))
+            win.blit(rudeTextt, (30, 225))
             win.blit(moreTexts, (30, 300))
             win.blit(nextRound, (60, 400))
             pygame.display.update()
@@ -263,6 +272,13 @@ def endscreen():
 
         if life == 0:
             game_over()
+            score = 0
+            roundScore = 0
+            jojoScore = 0
+            round = 1
+            streak = 0
+            life = 3
+            return
 
         end = True
         while end:
@@ -300,18 +316,7 @@ def endscreen():
 
 def game_over():
     pygame.mixer.music.set_volume(0.3)
-    global score
-    """
-    ARIEL ARIEL ARIEL ARIEL ARIEL
-    ARIEL ARIEL ARIEL ARIEL ARIEL
-    ARIEL ARIEL ARIEL ARIEL ARIEL
-    ARIEL ARIEL ARIEL ARIEL ARIEL
-    ARIEL ARIEL ARIEL ARIEL ARIEL
-    ARIEL ARIEL ARIEL ARIEL ARIEL
-
-    TELL THEM THAT THEY DIED IN THE GAME
-    PRINT THEIR FINAL SCORE BACK TO THEM
-    """
+    global score, running
 
     file = open("highscores.txt")
 
@@ -328,66 +333,110 @@ def game_over():
     # closes the file to write to it later
     file.close()
 
-    score_is_a_highscore = False
-    for hscore in hscores:  # scans from top to bottom to check if the score is a highscore
-        if score >= int(hscore):
-            score_is_a_highscore = True
-            scoreRank = hscores.index(hscore)
-            break
+    win.fill(000)
 
-    if score_is_a_highscore:
-        for i in range(10 - scoreRank - 1):
-            hscores[10 - i] = hscores[10 - (i + 1)]  # pushes every score down the board by 1
+    game_over_screen = True
+    while game_over_screen:
 
-        hscores[scoreRank] = score
+        roundText = largeFont.render("GAME OVER", True, (255, 255, 255))
 
-        print("OK YOU HAVE A HIGH SCORE NOW ENTER YOUR NAME")
+        rudeTextt = medFont.render("Total score is: " + str(score), True, (255, 255, 255))
+        space_skip = smallFont.render("Press space to play again!", True, (255, 255, 255))
 
-        """
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
-        ARIEL ARIEL ARIEL ARIEL ARIEL
+        win.blit(roundText, (30, 50))
+        win.blit(rudeTextt, (30, 200))
+        win.blit(space_skip, (180, 450))
 
-        ADD THE TEXT TO TELL THEM WHAT TO DO HERE
-        THE INITIALS *HAVE* TO BE 3 LETTERS LONG
-        ALSO DID I DO THE ALLOW QUIT GAME THING RIGHT
-        """
+        pygame.display.update()
 
-        userInit = ""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # check quit game
+                global running
+                running = False
+                return
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                win.fill(000)
+                pygame.display.update()
+                game_over_screen = False
 
-        while len(userInit) > 3:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    global running
-                    running = False
-                    return
+        score_is_a_highscore = False
+        for hscore in hscores:  # scans from top to bottom to check if the score is a highscore
+            if score >= int(hscore):
+                score_is_a_highscore = True
+                scoreRank = hscores.index(hscore)
+                break
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKSPACE:
-                        userInit = userInit[:-1]
-                    else:
-                        userInit += event.unicode.upper()
+        if score_is_a_highscore:
+            print(scoreRank)
+            for i in range(1, scoreRank):
+                hscores[scoreRank], hscores[scoreRank + i] = hscores[scoreRank + i], hscores[scoreRank]
+                initials[scoreRank], initials[scoreRank + i] = initials[scoreRank + i], initials[scoreRank]
 
-        initials[scoreRank] = userInit
+            hscores[scoreRank] = str(score) + "\n"
 
-        # makes the file blank so that it can
-        file = open("highscores.txt", "w")
+            print(hscores)
 
-        # now we put the new data back into the file
-        insertString = ""
-        for i in range(10):
-            insertString += initials[i]
-            insertString += "\n"
-            insertString += str(score[i])
-            insertString += "\n"
+            print("Congrats: High score!")
 
-        file.write(insertString)
-        file.close()
+            high_score_screen = True
+            userInit = ""
+            while high_score_screen:
+                while len(userInit) < 3:
+                    win.fill(000)
+                    roundText = largeFont.render("GAME OVER", True, (255, 255, 255))
+                    high_score = largeFont.render("HIGH SCORE", True, (255, 255, 255))
+                    rudeTextt = medFont.render("Total score is: " + str(score), True, (255, 255, 255))
+                    username = medFont.render("Input username: ", True, (255, 255, 255))
+                    userNAME = medFont.render(userInit, True, (255, 255, 255))
+                    space_skip = smallFont.render("Press space to play again!", True, (255, 255, 255))
 
-        """ASK THEM IF THEY WOULD LIKE TO PLAY AGAIN AWOEFJAOWIEJFAOIWEF"""
+                    win.blit(roundText, (30, 50))
+                    win.blit(high_score, (30, 90))
+                    win.blit(rudeTextt, (30, 200))
+                    win.blit(username, (30, 300))
+                    win.blit(userNAME, (330, 300))
+                    win.blit(space_skip, (180, 450))
+
+                    pygame.display.update()
+
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_BACKSPACE:
+                                userInit = userInit[:-1]
+                            if event.unicode.isalpha():
+                                userInit += event.unicode.upper()
+                            keys = pygame.key.get_pressed()
+                            if keys[pygame.K_SPACE]:
+                                win.fill(000)
+                                pygame.display.update()
+                                return
+
+                        pygame.display.update()
+
+                win.fill(000)
+
+                pygame.time.delay(3000)
+
+                initials[scoreRank] = userInit + "\n"
+
+                game_over_screen = False
+
+                # makes the file blank so that it can
+                file = open("highscores.txt", "w")
+
+                # now we put the new data back into the file
+                insertString = ""
+                for i in range(10):
+                    insertString += initials[i]
+                    insertString += str(hscores[i])
+
+                file.write(insertString)
+                file.close()
+
+                break
 
 
 def circle_find():
@@ -426,19 +475,6 @@ def get_hit(index):
     streak = 0
 
 
-# all possible positions for the circles on a five by five grid
-pos = [(50, 50), (150, 150), (250, 250), (350, 350), (450, 450), (50, 150), (50, 250), (50, 350), (50, 450), (150, 50),
-       (150, 250), (150, 350), (150, 450), (250, 50), (250, 150), (250, 350), (250, 450), (350, 50), (350, 150),
-       (350, 250), (350, 450), (450, 50), (450, 150), (450, 250), (450, 350)]
-goodCircles = []
-badCircles = []
-score = 0
-roundScore = 0
-jojoScore = 0
-round = 1
-streak = 0
-life = 3
-
 running = True
 
 # this is to start off the program
@@ -446,7 +482,7 @@ print("Program start!")
 
 while running:
     if start == True:
-        pygame.mixer.music.load('ghost choir.mp3')
+        pygame.mixer.music.load('ghost_choir.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.3)
         intro_screen()
@@ -469,6 +505,7 @@ while running:
 
                     streak += 1
                     roundScore += 5 * (streak // 3 + 1)
+                    score += 5 * (streak // 3 + 1)
 
     # to check if the bad circle has touched the good circle
     for circle in badCircles:
