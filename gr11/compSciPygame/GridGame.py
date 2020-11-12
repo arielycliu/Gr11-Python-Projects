@@ -1,6 +1,6 @@
 """
 
-BLIP THE CIRCLES
+RETURN OF THE JOJOS
 Ariel and Janice Game
 
 ~Game Instructions~
@@ -20,7 +20,7 @@ pygame.init()
 
 # Creating a window
 win = pygame.display.set_mode((500, 500))
-pygame.display.set_caption("Jan and Ari")
+pygame.display.set_caption("RETURN OF THE JOJOS")
 
 largeFont = pygame.font.SysFont("courier", 40)
 medFont = pygame.font.SysFont("courier", 30)
@@ -543,8 +543,7 @@ def circle_find():
 
         # closest circle center coords passed to badCircs
         closest = goodCircles[distance.index(min(distance))].center
-        circle.closest = distance.index(
-            min(distance))  # saves the index of the closest circle to delete the circle later
+        circle.closest = distance.index(min(distance))  # saves the index of the closest circle to delete the circle later
         distance = min(distance)  # fetches the lowest distance
 
         # movement - calculated using similar triangle ratios
