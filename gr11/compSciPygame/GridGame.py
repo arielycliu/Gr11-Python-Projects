@@ -513,7 +513,7 @@ print("Program start!")
 
 while running:
     if start == True:
-        pygame.mixer.music.load('ghost_choir.mp3')
+        pygame.mixer.music.load('ghost choir.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.3)
         intro_screen()
