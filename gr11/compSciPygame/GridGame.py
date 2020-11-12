@@ -331,7 +331,7 @@ def endscreen():
 
 
 def game_over():
-    # pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.set_volume(0.3)
     global score, running
 
     file = open("highscores.txt", "r")
@@ -513,12 +513,12 @@ print("Program start!")
 
 while running:
     if start == True:
-        # pygame.mixer.music.load('ghost_choir.mp3')
-        # pygame.mixer.music.play(-1)
-        # pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.load('ghost_choir.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.3)
         intro_screen()
         menu()
-        # pygame.mixer.music.set_volume(1)
+        pygame.mixer.music.set_volume(1)
         start = False
 
     for event in pygame.event.get():
