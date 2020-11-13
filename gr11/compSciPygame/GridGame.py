@@ -288,8 +288,7 @@ def endscreen():
         if life == 0:
             pygame.mixer.music.set_volume(0.3)
             game_over()
-            pygame.mixer.music.set_volume(0.3)
-
+            pygame.mixer.music.set_volume(0.3)########
             highscores()
             score = 0
             roundScore = 0
@@ -403,15 +402,17 @@ def game_over():
 
             high_score_screen = True
             userInit = ""
+
             while high_score_screen:
                 while len(userInit) != 3:  # once the initials are set they are unchangeable, similar to arcade games
-                    win.fill(000)
+
+                    pygame.display.update()
+
                     roundText = largeFont.render("GAME OVER", True, (255, 255, 255))
                     high_score = largeFont.render("HIGH SCORE", True, (255, 255, 255))
                     rudeTextt = medFont.render("Total score is: " + str(score), True, (255, 255, 255))
                     username = medFont.render("Input username: ", True, (255, 255, 255))
                     userNAME = medFont.render(userInit, True, (255, 255, 255))
-                    space_skip = smallFont.render("Press space to advance", True, (255, 255, 255))
 
                     win.blit(roundText, (30, 50))
                     win.blit(high_score, (30, 90))
@@ -428,6 +429,7 @@ def game_over():
                             pygame.quit()
                         if event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_BACKSPACE:
+                                win.fill(000)
                                 userInit = userInit[:-1]
                             if event.unicode.isalpha():
                                 userInit += event.unicode.upper()
@@ -437,11 +439,34 @@ def game_over():
                                 pygame.display.update()
                                 return
 
+
+                        userNAME = medFont.render(userInit, True, (255, 255, 255))
+                        win.blit(userNAME, (330, 300))
                         pygame.display.update()
 
-                userNAME = medFont.render(userInit, True, (255, 255, 255))
-                win.blit(userNAME, (330, 300))
-                pygame.display.update()
+                if len(userInit) == 3:
+                    win.fill(000)
+                    roundText = largeFont.render("GAME OVER", True, (255, 255, 255))
+                    high_score = largeFont.render("HIGH SCORE", True, (255, 255, 255))
+                    rudeTextt = medFont.render("Total score is: " + str(score), True, (255, 255, 255))
+                    username = medFont.render("Username: ", True, (255, 255, 255))
+                    userNAME = medFont.render(userInit, True, (255, 255, 255))
+
+                    win.blit(roundText, (30, 50))
+                    win.blit(high_score, (30, 90))
+                    win.blit(rudeTextt, (30, 200))
+                    win.blit(username, (30, 300))
+                    win.blit(userNAME, (330, 300))
+                    win.blit(space_skip, (180, 450))
+
+                    user_confirmation = medFont.render("Username Registered", True, (255, 255, 255))
+                    win.blit(user_confirmation, (100, 350))
+
+                    space_skip = smallFont.render("Press space to advance", True, (255, 255, 255))
+                    win.blit(space_skip, (180, 450))
+                    # userNAME = medFont.render(userInit, True, (255, 255, 255))
+                    # win.blit(userNAME, (330, 300))
+                    pygame.display.update()
 
                 initials[scoreRank] = userInit + "\n"
 
@@ -471,7 +496,7 @@ def game_over():
 def highscores():
     score_display = []
 
-    highscores_screen = True
+
 
     # Read file
     file = open("highscores.txt", "r")
@@ -496,18 +521,19 @@ def highscores():
         score_text = str((i + 1)) + ". " + initials[i][:3] + ", " + str(hscores[i])[:-1]
         score_display.append(smallFont.render(score_text, True, (255, 255, 255)))
 
-    for s in score_display:   # blit all the scores to the screen in two rows
-        if highscore_x == 30:
-            highscore_y += 50
-            win.blit(s, (highscore_x, highscore_y))
-            highscore_x = 250
+    for s in score_display[:5]:   # blit all the scores to the screen in the first column
+        win.blit(s, (highscore_x, highscore_y))
+        highscore_y += 50
 
-        else:
-            win.blit(s, (highscore_x, highscore_y))
-            highscore_x = 30
+    highscore_y = 120
+    highscore_x = 250
+
+    for s in score_display[5:]:   # blit all the scores to the screen in the second column
+        win.blit(s, (highscore_x, highscore_y))
+        highscore_y += 50
         pygame.display.update()
 
-
+    highscores_screen = True
     while highscores_screen:
         pygame.time.delay(25)  # rate
 
@@ -515,7 +541,7 @@ def highscores():
         space_skip = smallFont.render("Press space to play again!", True, (255, 255, 255))
 
         win.blit(roundText, (30, 50))
-        win.blit(space_skip, (180, 450))
+        win.blit(space_skip, (160, 450))
         pygame.display.update()
 
         for event in pygame.event.get():
