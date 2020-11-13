@@ -493,6 +493,7 @@ def game_over():
                             pygame.display.update()
                             return
 
+
 def highscores():
     score_display = []
 
@@ -591,11 +592,9 @@ def get_hit(index):
     streak = 0  # breaks any streak
 
 
-running = True
-
-# this is to start off the program
+# Main body of the program
 print("Program start!")
-
+running = True
 while running:
     if start == True:
         pygame.mixer.music.load('ghost choir.mp3')
@@ -610,7 +609,7 @@ while running:
         if event.type == pygame.QUIT:  # check quit game
             running = False
 
-        if event.type == pygame.MOUSEBUTTONUP:  # check for click
+        if event.type == pygame.MOUSEBUTTONUP:  # check for click score points
             pos = pygame.mouse.get_pos()  # get position of click
             for circle in goodCircles:
                 xm, ym = pos
@@ -627,19 +626,19 @@ while running:
     for circle in badCircles:
         try:  # for when an enemy tries to delete an circle that is already gone
             xb, yb = circle.center
-            xg, yg = goodCircles[circle.closest].center
+            xg, yg = goodCircles[circle.closest].center  # identify closest
         except:
             continue
         distance = math.hypot(xb - xg, yb - yg)  # calculate distance
         if distance <= 2 * circle.radius:  # compare distance of click from center of circle to radius of circle
-            get_hit(circle.closest)
+            get_hit(circle.closest)  # compare to 2 radius or diameter
 
     if goodCircles == [] and firstRound == False:  # otherwise round screen would display right after the menu
         endscreen()
-    elif goodCircles == [] and firstRound == True:
+    elif goodCircles == [] and firstRound == True:  # If it's the first round
         firstRound = False
 
-    if restart == True:
+    if restart == True:   # Moving between rounds, declared restart from endscreen
         pos = [(50, 50), (150, 150), (250, 250), (350, 350), (450, 450), (50, 150), (50, 250), (50, 350), (50, 450),
                (150, 50), (150, 250), (150, 350), (150, 450), (250, 50), (250, 150), (250, 350), (250, 450), (350, 50),
                (350, 150), (350, 250), (350, 450), (450, 50), (450, 150), (450, 250), (450, 350)]
@@ -650,11 +649,11 @@ while running:
         restart = False
 
     try:
-        circle_find()
+        circle_find() # function to find closest and update coord
     except:  # for when circles are removed at simultaneous times or other similar errors
         pass
 
-    redraw_game_window()
+    redraw_game_window()  # redrawing everything
 
     pygame.time.delay(delay)  # rate
 
