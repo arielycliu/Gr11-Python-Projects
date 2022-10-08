@@ -1,2 +1,2 @@
 #  Python School Projects
-Projects for Python comp sci gr11-12
+Projects for Python comp sci gr11
